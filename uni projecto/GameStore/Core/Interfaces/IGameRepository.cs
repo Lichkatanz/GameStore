@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GameStore.Core.Models;
 
-namespace uni_projecto.GameStore.Core.Interfaces
+namespace GameStore.Core.Interfaces
 {
-    internal interface IGameRepository
+    public interface IGameRepository
     {
+        Task<Game> AddGame(Game game);
+        Task<IEnumerable<Game>> GetAllGames();
     }
 }
-;
