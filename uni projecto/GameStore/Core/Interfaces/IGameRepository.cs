@@ -10,3 +10,4 @@ namespace uni_projecto.GameStore.Core.Interfaces
     {
     }
 }
+;
