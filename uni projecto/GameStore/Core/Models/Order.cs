@@ -3,14 +3,14 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace GameStore.Models
 {
-    public class Game
+    public class Order
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
-        public string Name { get; set; }
-        public string Genre { get; set; }
-        public decimal Price { get; set; }
+        public string GameId { get; set; }
+        public string CustomerName { get; set; }
+        public DateTime OrderDate { get; set; }
     }
 }
