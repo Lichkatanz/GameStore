@@ -4,8 +4,16 @@ using GameStore.Services;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using GameStore.Validators;
-
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Serilog;
+using System;
 var builder = WebApplication.CreateBuilder(args);
+
+
+
+
 
 // Register FluentValidation
 builder.Services.AddControllers().AddFluentValidation();
