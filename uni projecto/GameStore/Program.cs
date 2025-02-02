@@ -1,52 +1,29 @@
-﻿using GameStore.Models;
-using GameStore.Repositories;
-using GameStore.Services;
-using FluentValidation;
-using FluentValidation.AspNetCore;
-using GameStore.Validators;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;
-var builder = WebApplication.CreateBuilder(args);
-
-
-
-
-
-// Register FluentValidation
-builder.Services.AddControllers().AddFluentValidation();
-builder.Services.AddValidatorsFromAssemblyContaining<OrderRequestValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<GameDiscountValidator>();
-
-var app = builder.Build();
-app.UseAuthorization();
-app.MapControllers();
-app.Run();
-
-builder.Services.AddSingleton<GameStoreService>();
 
 var builder = WebApplication.CreateBuilder(args);
-// Configure MongoDB
-builder.Services.Configure<MongoDBSettings>(builder.Configuration.GetSection("MongoDB"));
 
-// Register repositories
-builder.Services.AddSingleton<GameRepository>();
-builder.Services.AddSingleton<OrderRepository>();
+// Configure Serilog with MongoDB Sink
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File("logs/app-log.txt", rollingInterval: RollingInterval.Day)
+    .WriteTo.MongoDB("mongodb://localhost:27017/GameStoreLogs", collectionName: "logs") // MongoDB connection
+    .Enrich.FromLogContext()
+    .CreateLogger();
 
-// Add Controllers
+builder.Host.UseSerilog(); // Add Serilog to the app
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// Enable Serilog request logging
+app.UseSerilogRequestLogging();
 
 app.UseAuthorization();
 app.MapControllers();
